@@ -38,7 +38,7 @@ INSERT INTO sales VALUES (20, 'Folder', 'Stationery', 6, 8, '2025-01-04');
 
 -- 1 masala:
 
-select category, sum(price * quantity) from sales group by category;
+select category, count(*) from sales group by category;
 +-------------+-----------------------+
 | category    | sum(price * quantity) |
 +-------------+-----------------------+
