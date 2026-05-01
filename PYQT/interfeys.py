@@ -1,4 +1,4 @@
-import json  # JSON bilan ishlash uchun
+import json  
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
@@ -34,8 +34,8 @@ class RegistrationApp(QWidget):
                 margin-top: 10px;
             }
             QLineEdit, QComboBox {
-                background-color: #333 ;
-                border: 2px solid #00FF00; /* Ramka yashil bo'lib qoladi */
+                background-color: #3333 ;
+                border: 2px solid #00FF00;
                 border-radius: 8px;
                 padding: 10px;
                 font-size: 15px;
@@ -61,7 +61,7 @@ class RegistrationApp(QWidget):
         """)
 
         layout = QVBoxLayout()
-        layout.setContentsMargins(30, 20, 30, 20)
+        
 
         layout.addWidget(QLabel("SHAXSIY MA'LUMOTLAR"))
         
@@ -90,7 +90,6 @@ class RegistrationApp(QWidget):
 
         layout.addStretch()
 
-        # Tugmalar
         btn_layout = QHBoxLayout()
         self.btn_submit = QPushButton("SUBMIT")
         self.btn_exit = QPushButton("EXIT")
@@ -102,7 +101,6 @@ class RegistrationApp(QWidget):
 
         self.city_combo.currentIndexChanged.connect(self.update_districts)
         self.btn_exit.clicked.connect(self.close)
-        # Submit tugmasini funksiyaga bog'ladik
         self.btn_submit.clicked.connect(self.submit_to_json)
 
         self.setLayout(layout)
@@ -119,7 +117,7 @@ class RegistrationApp(QWidget):
             self.district_combo.clear()
             self.district_combo.setEnabled(False)
 
-    # Yangi qo'shilgan funksiya
+    
     def submit_to_json(self):
         user_data = {
             "name": self.name_edit.text(),
@@ -129,7 +127,6 @@ class RegistrationApp(QWidget):
             "address": self.address_edit.text()
         }
 
-        # Faylni ochish va saqlash mantiqi
         try:
             with open("users.json", "r", encoding="utf-8") as file:
                 data = json.load(file)
