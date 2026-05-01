@@ -1,10 +1,10 @@
+import json  # JSON bilan ishlash uchun
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 class RegistrationApp(QWidget):
     def __init__(self):
         super().__init__()
-
         self.joylar = {
             "Toshkent shahri": ["Chilonzor", "Yunusobod", "Mirzo Ulug'bek", "Yashnobod", "Shayxontohur", "Olmazor", "Sergeli", "Yakkasaroy", "Bektemir", "Mirobod", "Uchtepa"],
             "Toshkent viloyati": ["Chirchiq", "Angren", "Olmaliq", "Bekobod", "Piskent", "O'rtachirchiq", "Qibray", "Zangiota", "Bo'stonliq", "Parkent", "Chinoz"],
@@ -22,7 +22,6 @@ class RegistrationApp(QWidget):
             "Qoraqalpog'iston": ["Nukus sh.", "Mo'ynoq", "Xo'jayli", "Qo'ng'irot", "Beruniy", "To'rtko'l", "Amudaryo", "Ellikqal'a", "Kegeyli", "Chimboy", "Taxtako'pir"]
         }
 
-       
         self.setStyleSheet("""
             QWidget {
                 background-color: black ; 
@@ -61,11 +60,9 @@ class RegistrationApp(QWidget):
             }
         """)
 
-    
         layout = QVBoxLayout()
         layout.setContentsMargins(30, 20, 30, 20)
 
-       
         layout.addWidget(QLabel("SHAXSIY MA'LUMOTLAR"))
         
         self.name_edit = QLineEdit()
@@ -76,7 +73,6 @@ class RegistrationApp(QWidget):
         self.surname_edit.setPlaceholderText("Familiya")
         layout.addWidget(self.surname_edit)
 
-       
         layout.addWidget(QLabel("YASHASH MANZILI MA'LUMOTLARI"))
         
         self.city_combo = QComboBox()
@@ -104,12 +100,13 @@ class RegistrationApp(QWidget):
         btn_layout.addWidget(self.btn_exit)
         layout.addLayout(btn_layout)
 
-        
         self.city_combo.currentIndexChanged.connect(self.update_districts)
         self.btn_exit.clicked.connect(self.close)
+        # Submit tugmasini funksiyaga bog'ladik
+        self.btn_submit.clicked.connect(self.submit_to_json)
 
         self.setLayout(layout)
-        self.setWindowTitle("User Registration")
+        self.setWindowTitle("Royxatdan otish")
         self.setFixedSize(400, 600)
 
     def update_districts(self):
@@ -121,6 +118,39 @@ class RegistrationApp(QWidget):
         else:
             self.district_combo.clear()
             self.district_combo.setEnabled(False)
+
+    # Yangi qo'shilgan funksiya
+    def submit_to_json(self):
+        user_data = {
+            "name": self.name_edit.text(),
+            "surname": self.surname_edit.text(),
+            "city": self.city_combo.currentText(),
+            "district": self.district_combo.currentText(),
+            "address": self.address_edit.text()
+        }
+
+        # Faylni ochish va saqlash mantiqi
+        try:
+            with open("users.json", "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except:
+            data = []
+
+        data.append(user_data)
+
+        with open("users.json", "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+        
+        QMessageBox.information(self, "Muvaffaqiyat", "Royhatdan muvaffaqiyatli otdingiz!")
+
+
+
+        self.name_edit.clear()          
+        self.surname_edit.clear()        
+        self.address_edit.clear()        
+        self.city_combo.setCurrentIndex(0) 
+        self.district_combo.clear()      
+        self.district_combo.setEnabled(False)
 
 app = QApplication([])
 win = RegistrationApp()
